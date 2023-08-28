@@ -82,15 +82,15 @@ etcd::Client::Client(std::string const& address, std::string const& username,
 }
 
 etcd::Client::Client(std::string const& address, std::string const& username,
-                     std::string const& password, std::string const& ca,
-                     std::string const& cert, std::string const& privkey,
+                     std::string const& password, int const auth_token_ttl,
+                     std::string const& ca, std::string const& cert,
+                     std::string const& privkey,
                      std::string const& target_name_override,
-                     int const auth_token_ttl,
                      std::string const& load_balancer) {
   this->own_client = true;
   this->client =
-      new SyncClient(address, username, password, ca, cert, privkey,
-                     target_name_override, auth_token_ttl, load_balancer);
+      new SyncClient(address, username, password, auth_token_ttl, ca, cert,
+                     privkey, target_name_override, load_balancer);
 }
 
 etcd::Client::Client(std::string const& address, std::string const& username,

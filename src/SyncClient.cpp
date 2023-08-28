@@ -400,9 +400,9 @@ etcd::SyncClient* etcd::SyncClient::WithUser(
 
 etcd::SyncClient::SyncClient(
     std::string const& address, std::string const& username,
-    std::string const& password, std::string const& ca, std::string const& cert,
-    std::string const& privkey, std::string const& target_name_override,
-    int const auth_token_ttl, std::string const& load_balancer) {
+    std::string const& password, int const auth_token_ttl,
+    std::string const& ca, std::string const& cert, std::string const& privkey,
+    std::string const& target_name_override, std::string const& load_balancer) {
   // create channels
   std::string const addresses =
       etcd::detail::strip_and_resolve_addresses(address);
