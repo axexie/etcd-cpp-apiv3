@@ -220,10 +220,9 @@ class SyncClient {
   );
 
   SyncClient(std::string const& etcd_url, std::string const& username,
-             std::string const& password, int const auth_token_ttl,
-             std::string const& ca, std::string const& cert,
-             std::string const& privkey,
-             std::string const& target_name_override,
+             std::string const& password, std::string const& ca,
+             std::string const& cert, std::string const& privkey,
+             std::string const& target_name_override, int const auth_token_ttl,
              std::string const& load_balancer = "round_robin");
 
   /**

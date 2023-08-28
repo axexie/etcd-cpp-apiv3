@@ -105,6 +105,22 @@ class Client {
          std::string const& password, int const auth_token_ttl = 300,
          std::string const& load_balancer = "round_robin");
 
+  Client(std::string const& etcd_url, std::string const& username,
+         std::string const& password, std::string const& ca,
+         std::string const& cert, std::string const& privkey,
+         std::string const& target_name_override = "",
+         int const auth_token_ttl = 300,
+         std::string const& load_balancer = "round_robin");
+
+  etcd::SyncClient::SyncClient(std::string const& address,
+                               std::string const& username,
+                               std::string const& password,
+                               int const auth_token_ttl, std::string const& ca,
+                               std::string const& cert,
+                               std::string const& privkey,
+                               std::string const& target_name_override,
+                               std::string const& load_balancer);
+
   /**
    * Constructs an etcd client object.
    *
