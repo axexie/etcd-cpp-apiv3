@@ -398,6 +398,38 @@ etcd::SyncClient* etcd::SyncClient::WithUser(
                               arguments);
 }
 
+etcd::SyncClient::SyncClient(
+    std::string const& address, std::string const& username,
+    std::string const& password, int const auth_token_ttl,
+    std::string const& ca, std::string const& cert, std::string const& privkey,
+    std::string const& target_name_override, std::string const& load_balancer) {
+  // create channels
+  std::string const addresses =
+      etcd::detail::strip_and_resolve_addresses(address);
+  grpc::ChannelArguments grpc_args;
+  grpc_args.SetMaxSendMessageSize(std::numeric_limits<int>::max());
+  grpc_args.SetMaxReceiveMessageSize(std::numeric_limits<int>::max());
+  std::shared_ptr<grpc::ChannelCredentials> creds = grpc::SslCredentials(
+      etcd::detail::make_ssl_credentials(ca, cert, privkey));
+  grpc_args.SetLoadBalancingPolicyName(load_balancer);
+  if (!target_name_override.empty()) {
+    grpc_args.SetString(GRPC_SSL_TARGET_NAME_OVERRIDE_ARG,
+                        target_name_override);
+  }
+  this->channel = grpc::CreateCustomChannel(addresses, creds, grpc_args);
+  // auth
+  this->token_authenticator.reset(new TokenAuthenticator(
+      this->channel, username, password, auth_token_ttl));
+
+  // setup stubs
+  stubs.reset(new EtcdServerStubs{});
+  stubs->kvServiceStub = KV::NewStub(this->channel);
+  stubs->watchServiceStub = Watch::NewStub(this->channel);
+  stubs->leaseServiceStub = Lease::NewStub(this->channel);
+  stubs->lockServiceStub = Lock::NewStub(this->channel);
+  stubs->electionServiceStub = Election::NewStub(this->channel);
+}
+
 etcd::SyncClient::SyncClient(std::string const& address, std::string const& ca,
                              std::string const& cert,
                              std::string const& privkey,
