@@ -81,7 +81,7 @@ etcd::Client::Client(std::string const& address, std::string const& username,
                                 load_balancer);
 }
 
-etcd::Client::Client(std::string const& etcd_url, std::string const& username,
+etcd::Client::Client(std::string const& address, std::string const& username,
                      std::string const& password, std::string const& ca,
                      std::string const& cert, std::string const& privkey,
                      std::string const& target_name_override,
